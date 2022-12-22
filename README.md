@@ -1,3 +1,3 @@
 # Minesweeper
 Minesweeper by OnRisely Studio
-<img src="doc/imgses/Minesweeper Pro.png">
+<img src="Minesweeper/doc/images/Minesweeper Pro.png">
