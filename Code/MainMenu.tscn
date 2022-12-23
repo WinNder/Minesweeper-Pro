@@ -1,0 +1,51 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Button.gd" type="Script" id=1]
+
+[node name="MainMenu" type="Node2D"]
+
+[node name="Button" type="Button" parent="."]
+margin_left = 500.0
+margin_top = 125.0
+margin_right = 582.0
+margin_bottom = 145.0
+text = "New Game"
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button2" type="Button" parent="."]
+margin_left = 500.0
+margin_top = 150.0
+margin_right = 582.0
+margin_bottom = 170.0
+text = "Quit Game"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+margin_left = 500.0
+margin_top = 100.0
+margin_right = 586.0
+margin_bottom = 114.0
+text = "Minesweeper"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="."]
+margin_left = 855.0
+margin_top = 565.0
+margin_right = 1021.0
+margin_bottom = 596.0
+text = "Version 1.0
+Copyright Onrisely Studio "
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="pressed" from="Button" to="Button" method="_on_Button_pressed"]
+[connection signal="pressed" from="Button2" to="Button" method="_on_Button2_pressed"]
