@@ -6,15 +6,22 @@ extends Node2D
 # var b = "text"
 var mines = []
 var died = false
+var columns = 9
+var rows = 9
+var mines_count = 10
 # Called when the node enters the scene tree for the first time.
 
 func _ready():
 	
+	print(OS.get_cmdline_args())
 	get_node("/root/Main/MainMenu").visible = false
+	if OS.get_cmdline_args().size() == 3:
+		columns = OS.get_cmdline_args()[0]
+		rows = OS.get_cmdline_args()[1]
+		mines_count = OS.get_cmdline_args()[2]
 	
-	
-	for i in 9:
-		for j in 9:
+	for i in int(columns):
+		for j in int(rows):
 			#print(i,j)
 			var butt = TextureButton.new()
 			$chd.add_child(butt)
@@ -29,10 +36,10 @@ func _ready():
 				
 	#$chd.get_child(1).connect("pressed", self, "sweep")
 	var rng = RandomNumberGenerator.new()
-	for i in 10:
+	for i in int(mines_count):
 		rng.randomize()
-		var MineX = rng.randi_range(0,8)
-		var MineY = rng.randi_range(0,8)
+		var MineX = rng.randi_range(0,int(columns)-1)
+		var MineY = rng.randi_range(0,int(rows)-1)
 		#print(MineX, MineY)
 		print((MineX+1)*(MineY+1))
 		#emit_signal("pressed", $chd.get_child((MineX+1)*(MineY+1)))

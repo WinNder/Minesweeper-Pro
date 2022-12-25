@@ -29,3 +29,4 @@ script = SubResource( 1 )
 [node name="MainMenu" parent="." instance=ExtResource( 2 )]
 
 [node name="Game" parent="." instance=ExtResource( 1 )]
+position = Vector2( -350, -114 )
