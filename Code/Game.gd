@@ -4,6 +4,11 @@ extends Node2D
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
+const MINE = 0
+const FLAG = 1
+const EMPTY = 2
+const EMPTY_HIT = 3
+var board = {}
 var mines = []
 var died = false
 var columns = 9
@@ -25,14 +30,14 @@ func _ready():
 			#print(i,j)
 			var butt = TextureButton.new()
 			$chd.add_child(butt)
-			
+			board[Vector2(i,j)] = EMPTY
 			butt.set_position(Vector2(350+(j*32),100+(i*32)))
 			butt.set_size(Vector2(32,32))
 			butt.set_normal_texture(load("res://plate.png"))
 			butt.set_pressed_texture(load("res://pressedplate.png"))
 			#butt.set_focused_texture(load("res://pressedplate.png"))
 			#if MineX == i and MineY == j:
-			butt.connect("gui_input", self, "sweep", [butt])
+			butt.connect("gui_input", self, "sweep", [butt,i, j])
 				
 	#$chd.get_child(1).connect("pressed", self, "sweep")
 	var rng = RandomNumberGenerator.new()
@@ -40,11 +45,15 @@ func _ready():
 		rng.randomize()
 		var MineX = rng.randi_range(0,int(columns)-1)
 		var MineY = rng.randi_range(0,int(rows)-1)
+		if Vector2(MineX, MineY) in board and board[Vector2(MineX, MineY)] != MINE:	
+			board[Vector2(MineX, MineY)] = MINE
 		#print(MineX, MineY)
 		print((MineX+1)*(MineY+1))
 		#emit_signal("pressed", $chd.get_child((MineX+1)*(MineY+1)))
-		if $chd.get_child((MineX+1)*(MineY+1)).is_connected("gui_input", self, "mine") == false:
-			$chd.get_child((MineX+1)*(MineY+1)).connect("gui_input", self, "mine",[$chd.get_child((MineX+1)*(MineY+1))])
+		
+			
+		#if $chd.get_child((MineX+1)*(MineY+1)).is_connected("gui_input", self, "mine") == false:
+		$chd.get_child((MineX+1)*(MineY+1)).connect("gui_input", self, "mine",[$chd.get_child((MineX+1)*(MineY+1))])
 		mines.append($chd.get_child((MineX+1)*(MineY+1)))
 	pass # Replace with function body.
 	
@@ -58,16 +67,68 @@ func mine(event, x):
 				print("Game Over!")
 				died = true
 			BUTTON_RIGHT:
-				x.set_normal_texture(load("res://plateflag.png"))
-func sweep(event, x):
+				if !died:
+					x.set_normal_texture(load("res://plateflag.png"))
+func sweep(event, btn, x, y):
 	if event is InputEventMouseButton and event.pressed:
 		match event.button_index:
 			BUTTON_LEFT:
-				if !died:
-					x.set_normal_texture(load("res://pressedplate.png"))
+				if !died and board[Vector2(x,y)] != FLAG:
+					var local_mines = 0
+					#for i in 3:
+					#	for j in 3:
+					#		if board[Vector2(x+1+i, y+1+j)] == MINE:
+					#			local_mines += 1
+					#print(local_mines)
+					if Vector2(x+1,y+1) in board:
+						if board[Vector2(x+1, y+1)] == MINE:
+							local_mines += 1
+					if Vector2(x-1,y-1) in board: 
+						if board[Vector2(x-1, y-1)] == MINE:
+							local_mines += 1
+					if Vector2(x-1,y+1) in board: 
+						if board[Vector2(x-1, y+1)] == MINE:
+							local_mines += 1
+					if Vector2(x+1,y-1) in board:
+						if board[Vector2(x+1, y-1)] == MINE: 
+							local_mines += 1
+					if Vector2(x,y+1) in board:
+						if board[Vector2(x, y+1)] == MINE: 
+							local_mines += 1
+					if  Vector2(x,y-1) in board:
+						if board[Vector2(x, y-1)] == MINE: 
+							local_mines += 1
+					if Vector2(x+1,y) in board:  
+						if board[Vector2(x+1, y)] == MINE:  
+							local_mines += 1
+					if Vector2(x-1,y) in board:
+						if board[Vector2(x-1, y)] == MINE:
+							local_mines += 1
+					print(local_mines)
+					btn.set_normal_texture(load("res://pressedplate.png"))
+					board[Vector2(x,y)] = EMPTY_HIT
+					
 			BUTTON_RIGHT:
-				if !died:
-					x.set_normal_texture(load("res://plateflag.png"))
+				if !died: #and x.get_normal_texture() != load("res://pressedplate.png")
+					#print(board[Vector2(x,y)])
+					if Vector2(x,y) in board:
+						if board[Vector2(x,y)] != EMPTY and board[Vector2(x,y)] != EMPTY_HIT:
+							board[Vector2(x,y)] = EMPTY
+							btn.set_normal_texture(load("res://plate.png"))
+						elif board[Vector2(x,y)] != EMPTY_HIT:
+							board[Vector2(x,y)] = FLAG
+							
+							btn.set_normal_texture(load("res://plateflag.png"))
+						
+					#else:
+						#board[Vector2(x, y)] = EMPTY
+						
+					#if x.get_normal_texture() == load("res://plateflag.png"):
+						#x.set_normal_texture(load("res://plate.png"))
+					#else:
+						
+						
+						
 	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
