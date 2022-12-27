@@ -11,8 +11,8 @@ const EMPTY_HIT = 3
 var board = {}
 var mines = []
 var died = false
-var columns = 9
-var rows = 9
+var columns = 8
+var rows = 8
 var mines_count = 10
 # Called when the node enters the scene tree for the first time.
 
@@ -37,7 +37,7 @@ func _ready():
 			butt.set_pressed_texture(load("res://pressedplate.png"))
 			#butt.set_focused_texture(load("res://pressedplate.png"))
 			#if MineX == i and MineY == j:
-			butt.connect("gui_input", self, "sweep", [butt,i, j])
+			butt.connect("gui_input", self, "sweep", [butt, j, i])
 				
 	#$chd.get_child(1).connect("pressed", self, "sweep")
 	var rng = RandomNumberGenerator.new()
@@ -48,13 +48,17 @@ func _ready():
 		if Vector2(MineX, MineY) in board and board[Vector2(MineX, MineY)] != MINE:	
 			board[Vector2(MineX, MineY)] = MINE
 		#print(MineX, MineY)
-			print((MineX+1)*(MineY+1))
+			print("Мина расположена на: ", MineX, " ", MineY)
+			#for b in (columns):
+				#for d in (rows):
+					#print("x: ", b, " y: ", d, " Ее значение: ", board[Vector2(b, d)])
+				#print(" ")
 		#emit_signal("pressed", $chd.get_child((MineX+1)*(MineY+1)))
 		
 			
 		#if $chd.get_child((MineX+1)*(MineY+1)).is_connected("gui_input", self, "mine") == false:
-			$chd.get_child((MineX+1)*(MineY+1)).connect("gui_input", self, "mine",[$chd.get_child((MineX+1)*(MineY+1))])
-			mines.append($chd.get_child((MineX+1)*(MineY+1)))
+			$chd.get_child((columns*MineY)+MineX+1).connect("gui_input", self, "mine",[$chd.get_child((columns*MineY)+MineX+1)])
+			mines.append($chd.get_child((columns*MineY)+MineX+1))
 	pass # Replace with function body.
 	
 func mine(event, x):
@@ -80,6 +84,8 @@ func sweep(event, btn, x, y):
 							if Vector2(x-1+i,y-1+j) in board:
 								if board[Vector2(x-1+i, y-1+j)] == MINE: #or board[Vector2(x-1+i, y-1+j)] == FLAG:
 									local_mines += 1
+									print("Мина найдена на:", x-1+i, " ", y-1+j)
+									print("Нажатие было на:", x, " ", y)
 					print(local_mines)
 					if local_mines > 0:
 						btn.set_normal_texture(load("res://pplate_"+str(local_mines)+".png"))

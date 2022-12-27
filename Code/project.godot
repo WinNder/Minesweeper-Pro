@@ -14,6 +14,16 @@ config/name="Minesweeper"
 run/main_scene="res://Main.tscn"
 config/icon="res://icon.png"
 
+[debug]
+
+settings/physics_interpolation/enable_warnings=false
+settings/gdscript/max_call_stack=2048
+settings/visual_script/max_call_stack=2048
+
+[global]
+
+max_remote_stdout_chars_per_second=false
+
 [physics]
 
 common/enable_pause_aware_picking=true
