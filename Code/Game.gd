@@ -48,13 +48,13 @@ func _ready():
 		if Vector2(MineX, MineY) in board and board[Vector2(MineX, MineY)] != MINE:	
 			board[Vector2(MineX, MineY)] = MINE
 		#print(MineX, MineY)
-		print((MineX+1)*(MineY+1))
+			print((MineX+1)*(MineY+1))
 		#emit_signal("pressed", $chd.get_child((MineX+1)*(MineY+1)))
 		
 			
 		#if $chd.get_child((MineX+1)*(MineY+1)).is_connected("gui_input", self, "mine") == false:
-		$chd.get_child((MineX+1)*(MineY+1)).connect("gui_input", self, "mine",[$chd.get_child((MineX+1)*(MineY+1))])
-		mines.append($chd.get_child((MineX+1)*(MineY+1)))
+			$chd.get_child((MineX+1)*(MineY+1)).connect("gui_input", self, "mine",[$chd.get_child((MineX+1)*(MineY+1))])
+			mines.append($chd.get_child((MineX+1)*(MineY+1)))
 	pass # Replace with function body.
 	
 func mine(event, x):
@@ -75,38 +75,44 @@ func sweep(event, btn, x, y):
 			BUTTON_LEFT:
 				if !died and board[Vector2(x,y)] != FLAG:
 					var local_mines = 0
-					#for i in 3:
-					#	for j in 3:
-					#		if board[Vector2(x+1+i, y+1+j)] == MINE:
-					#			local_mines += 1
-					#print(local_mines)
-					if Vector2(x+1,y+1) in board:
-						if board[Vector2(x+1, y+1)] == MINE:
-							local_mines += 1
-					if Vector2(x-1,y-1) in board: 
-						if board[Vector2(x-1, y-1)] == MINE:
-							local_mines += 1
-					if Vector2(x-1,y+1) in board: 
-						if board[Vector2(x-1, y+1)] == MINE:
-							local_mines += 1
-					if Vector2(x+1,y-1) in board:
-						if board[Vector2(x+1, y-1)] == MINE: 
-							local_mines += 1
-					if Vector2(x,y+1) in board:
-						if board[Vector2(x, y+1)] == MINE: 
-							local_mines += 1
-					if  Vector2(x,y-1) in board:
-						if board[Vector2(x, y-1)] == MINE: 
-							local_mines += 1
-					if Vector2(x+1,y) in board:  
-						if board[Vector2(x+1, y)] == MINE:  
-							local_mines += 1
-					if Vector2(x-1,y) in board:
-						if board[Vector2(x-1, y)] == MINE:
-							local_mines += 1
+					for i in 3:
+						for j in 3:
+							if Vector2(x-1+i,y-1+j) in board:
+								if board[Vector2(x-1+i, y-1+j)] == MINE: #or board[Vector2(x-1+i, y-1+j)] == FLAG:
+									local_mines += 1
 					print(local_mines)
-					btn.set_normal_texture(load("res://pressedplate.png"))
-					board[Vector2(x,y)] = EMPTY_HIT
+					if local_mines > 0:
+						btn.set_normal_texture(load("res://pplate_"+str(local_mines)+".png"))
+					else:
+						btn.set_normal_texture(load("res://pressedplate.png"))
+						board[Vector2(x,y)] = EMPTY_HIT
+					
+#					if Vector2(x+1,y+1) in board:
+#						if board[Vector2(x+1, y+1)] == MINE:
+#							local_mines += 1
+#					if Vector2(x-1,y-1) in board: 
+#						if board[Vector2(x-1, y-1)] == MINE:
+#							local_mines += 1
+#					if Vector2(x-1,y+1) in board: 
+#						if board[Vector2(x-1, y+1)] == MINE:
+#							local_mines += 1
+#					if Vector2(x+1,y-1) in board:
+#						if board[Vector2(x+1, y-1)] == MINE: 
+#							local_mines += 1
+#					if Vector2(x,y+1) in board:
+#						if board[Vector2(x, y+1)] == MINE: 
+#							local_mines += 1
+#					if  Vector2(x,y-1) in board:
+#						if board[Vector2(x, y-1)] == MINE: 
+#							local_mines += 1
+#					if Vector2(x+1,y) in board:  
+#						if board[Vector2(x+1, y)] == MINE:  
+#							local_mines += 1
+#					if Vector2(x-1,y) in board:
+#						if board[Vector2(x-1, y)] == MINE:
+#							local_mines += 1
+					
+					
 					
 			BUTTON_RIGHT:
 				if !died: #and x.get_normal_texture() != load("res://pressedplate.png")
