@@ -11,6 +11,7 @@ var columns = 8
 var rows = 8
 var mines_count = 10
 var theme = MineTheme.new()
+var buttons = [[]]
 
 func create_field():
 	for i in int(columns):
