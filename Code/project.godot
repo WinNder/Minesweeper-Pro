@@ -8,6 +8,22 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "TextureButton",
+"class": "MineButton",
+"language": "GDScript",
+"path": "res://MineButton.gd"
+}, {
+"base": "Object",
+"class": "MineTheme",
+"language": "GDScript",
+"path": "res://Theme.gd"
+} ]
+_global_script_class_icons={
+"MineButton": "",
+"MineTheme": ""
+}
+
 [application]
 
 config/name="Minesweeper"
@@ -16,9 +32,9 @@ config/icon="res://icon.png"
 
 [debug]
 
-settings/physics_interpolation/enable_warnings=false
 settings/gdscript/max_call_stack=2048
 settings/visual_script/max_call_stack=2048
+settings/physics_interpolation/enable_warnings=false
 
 [global]
 

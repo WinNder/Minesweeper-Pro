@@ -1,2 +1,2 @@
-﻿1990
-C:/Users/EliteGroup/Desktop/Godot_v3.4.2-stable_mono_win64/Godot_v3.4.2-stable_mono_win64.exe
+﻿39643
+/home/sanek2005/programs/Godot_v3.4/Godot_v3.4-stable_mono_x11.64
