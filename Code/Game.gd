@@ -41,10 +41,7 @@ func create_mines():
 			$Buttons.get_child((columns*MineY)+MineX+1).connect("gui_input", self, "mine",[$Buttons.get_child((columns*MineY)+MineX+1)])
 			mines.append($Buttons.get_child((columns*MineY)+MineX+1))	
 
-func _ready():
-	
-	theme.load_theme("default")
-	
+func process_cmd():
 	print(OS.get_cmdline_args())
 	get_node("/root/Main/MainMenu").visible = false
 	
@@ -52,11 +49,15 @@ func _ready():
 		columns = OS.get_cmdline_args()[0]
 		rows = OS.get_cmdline_args()[1]
 		mines_count = OS.get_cmdline_args()[2]
+		
+func _ready():
 	
-	#создание кнопок
+	theme.load_theme("default")
+	
+	process_cmd()
+	
 	create_field()
 
-	#создание мин
 	create_mines()
 	
 func mine(event, x):
