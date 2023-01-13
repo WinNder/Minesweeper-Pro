@@ -8,12 +8,13 @@ const MINE = 0
 const FLAG = 1
 const EMPTY = 2
 const EMPTY_HIT = 3
+const NUMBER = 4
 var board = {}
 var mines = []
 var died = false
-var columns = 8
-var rows = 8
-var mines_count = 10
+var columns = 9
+var rows = 9
+var mines_count = 15
 # Called when the node enters the scene tree for the first time.
 
 func _ready():
@@ -24,28 +25,29 @@ func _ready():
 		columns = OS.get_cmdline_args()[0]
 		rows = OS.get_cmdline_args()[1]
 		mines_count = OS.get_cmdline_args()[2]
-	
+		
+		
 	for i in int(columns):
 		for j in int(rows):
 			#print(i,j)
 			var butt = TextureButton.new()
 			$chd.add_child(butt)
 			board[Vector2(i,j)] = EMPTY
-			butt.set_position(Vector2(350+(j*32),100+(i*32)))
+			butt.set_position(Vector2((j*32),82+(i*32)))
 			butt.set_size(Vector2(32,32))
 			butt.set_normal_texture(load("res://plate.png"))
 			butt.set_pressed_texture(load("res://pressedplate.png"))
 			#butt.set_focused_texture(load("res://pressedplate.png"))
 			#if MineX == i and MineY == j:
-			butt.connect("gui_input", self, "sweep", [butt, j, i])
+			butt.connect("gui_input", self, "click", [butt, j, i])
 				
 	#$chd.get_child(1).connect("pressed", self, "sweep")
 	var rng = RandomNumberGenerator.new()
-	for i in int(mines_count):
+	for n in int(mines_count):
 		rng.randomize()
 		var MineX = rng.randi_range(0,int(columns)-1)
 		var MineY = rng.randi_range(0,int(rows)-1)
-		if Vector2(MineX, MineY) in board and board[Vector2(MineX, MineY)] != MINE:	
+		if board[Vector2(MineX, MineY)] != MINE:	
 			board[Vector2(MineX, MineY)] = MINE
 		#print(MineX, MineY)
 			print("Мина расположена на: ", MineX, " ", MineY)
@@ -73,25 +75,25 @@ func mine(event, x):
 			BUTTON_RIGHT:
 				if !died:
 					x.set_normal_texture(load("res://plateflag.png"))
-func sweep(event, btn, x, y):
+func click(event, btn, x, y):
 	if event is InputEventMouseButton and event.pressed:
 		match event.button_index:
 			BUTTON_LEFT:
-				if !died and board[Vector2(x,y)] != FLAG:
-					var local_mines = 0
-					for i in 3:
-						for j in 3:
-							if Vector2(x-1+i,y-1+j) in board:
-								if board[Vector2(x-1+i, y-1+j)] == MINE: #or board[Vector2(x-1+i, y-1+j)] == FLAG:
-									local_mines += 1
-									print("Мина найдена на:", x-1+i, " ", y-1+j)
-									print("Нажатие было на:", x, " ", y)
-					print(local_mines)
-					if local_mines > 0:
-						btn.set_normal_texture(load("res://pplate_"+str(local_mines)+".png"))
-					else:
-						btn.set_normal_texture(load("res://pressedplate.png"))
-						board[Vector2(x,y)] = EMPTY_HIT
+				var local_mines = 0
+				for i in 3:
+					for j in 3:
+						if Vector2(x-1+i,y-1+j) in board:
+							if board[Vector2(x-1+i, y-1+j)] == MINE:
+								local_mines += 1
+							print(local_mines)
+							if board[Vector2(x, y)] != EMPTY_HIT:
+								if local_mines > 0:
+									sweep(btn,x,y)
+								else:
+									sweep($chd.get_child((columns*(y-1+i))+(x-1+j)+1), i, j);
+									#else:
+										#btn.set_normal_texture(load("res://pressedplate.png"))
+										#board[Vector2(i,j)] = EMPTY_HIT
 					
 #					if Vector2(x+1,y+1) in board:
 #						if board[Vector2(x+1, y+1)] == MINE:
@@ -142,7 +144,23 @@ func sweep(event, btn, x, y):
 						
 						
 	
-
+func sweep(btn, x, y):
+	if !died and board[Vector2(x,y)] != FLAG:
+					var local_mines = 0
+					for i in 3:
+						for j in 3:
+							if Vector2(x-1+i,y-1+j) in board:
+								if board[Vector2(x-1+i, y-1+j)] == MINE: #or board[Vector2(x-1+i, y-1+j)] == FLAG:
+									local_mines += 1
+									print("Мина найдена на:", x-1+i, " ", y-1+j)
+									print("Нажатие было на:", x, " ", y)
+					print(local_mines)
+					if local_mines > 0:
+						btn.set_normal_texture(load("res://pplate_"+str(local_mines)+".png"))
+						#board[Vector2(x,y)] = NUMBER
+					else:
+						btn.set_normal_texture(load("res://pressedplate.png"))
+						board[Vector2(x,y)] = EMPTY_HIT
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass

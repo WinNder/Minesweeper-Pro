@@ -9,6 +9,7 @@ script = ExtResource( 1 )
 [node name="chd" type="Node" parent="."]
 
 [node name="Shovel-stuck-in-the-ground101510-208" type="Sprite" parent="chd"]
+visible = false
 position = Vector2( 512, 300 )
 scale = Vector2( 1.63578, 1.44231 )
 texture = ExtResource( 2 )
