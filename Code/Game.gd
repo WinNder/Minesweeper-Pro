@@ -14,7 +14,7 @@ var mines = []
 var died = false
 var columns = 9
 var rows = 9
-var mines_count = 15
+var mines_count = 2
 # Called when the node enters the scene tree for the first time.
 
 func _ready():
@@ -85,12 +85,14 @@ func click(event, btn, x, y):
 						if Vector2(x-1+i,y-1+j) in board:
 							if board[Vector2(x-1+i, y-1+j)] == MINE:
 								local_mines += 1
-							print(local_mines)
-							if board[Vector2(x, y)] != EMPTY_HIT:
-								if local_mines > 0:
-									sweep(btn,x,y)
-								else:
-									sweep($chd.get_child((columns*(y-1+i))+(x-1+j)+1), i, j);
+				if board[Vector2(x, y)] != EMPTY_HIT:
+					if local_mines > 0:
+						sweep($chd.get_child(columns*y+x+1), x, y)
+					elif local_mines == 0:
+						for a in 3:
+							for b in 3:
+								sweep($chd.get_child((columns*(y-1+b))+(x-1+a)+1), x+a-1, y+b-1);
+								print("Открываю x: ", x+a-1, " и y: ", y+b-1)
 									#else:
 										#btn.set_normal_texture(load("res://pressedplate.png"))
 										#board[Vector2(i,j)] = EMPTY_HIT
@@ -152,9 +154,6 @@ func sweep(btn, x, y):
 							if Vector2(x-1+i,y-1+j) in board:
 								if board[Vector2(x-1+i, y-1+j)] == MINE: #or board[Vector2(x-1+i, y-1+j)] == FLAG:
 									local_mines += 1
-									print("Мина найдена на:", x-1+i, " ", y-1+j)
-									print("Нажатие было на:", x, " ", y)
-					print(local_mines)
 					if local_mines > 0:
 						btn.set_normal_texture(load("res://pplate_"+str(local_mines)+".png"))
 						#board[Vector2(x,y)] = NUMBER
