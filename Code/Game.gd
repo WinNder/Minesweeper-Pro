@@ -76,12 +76,13 @@ func mine(event, x):
 				if !died:
 					x.set_normal_texture(load("res://plateflag.png"))
 func click(event, btn, x, y):
+	#check()
 	if event is InputEventMouseButton and event.pressed:
 		match event.button_index:
 			BUTTON_LEFT:
 				var local_mines = 0
-				for i in 3:
-					for j in 3:
+				for i in columns-2:
+					for j in rows-2:
 						if Vector2(x-1+i,y-1+j) in board:
 							if board[Vector2(x-1+i, y-1+j)] == MINE:
 								local_mines += 1
@@ -89,8 +90,8 @@ func click(event, btn, x, y):
 					if local_mines > 0:
 						sweep($chd.get_child(columns*y+x+1), x, y)
 					elif local_mines == 0:
-						for a in 3:
-							for b in 3:
+						for a in columns-2:
+							for b in rows-2:
 								sweep($chd.get_child((columns*(y-1+b))+(x-1+a)+1), x+a-1, y+b-1);
 								print("Открываю x: ", x+a-1, " и y: ", y+b-1)
 									#else:
@@ -147,19 +148,30 @@ func click(event, btn, x, y):
 						
 	
 func sweep(btn, x, y):
-	if !died and board[Vector2(x,y)] != FLAG:
-					var local_mines = 0
-					for i in 3:
-						for j in 3:
-							if Vector2(x-1+i,y-1+j) in board:
-								if board[Vector2(x-1+i, y-1+j)] == MINE: #or board[Vector2(x-1+i, y-1+j)] == FLAG:
-									local_mines += 1
-					if local_mines > 0:
-						btn.set_normal_texture(load("res://pplate_"+str(local_mines)+".png"))
-						#board[Vector2(x,y)] = NUMBER
-					else:
-						btn.set_normal_texture(load("res://pressedplate.png"))
-						board[Vector2(x,y)] = EMPTY_HIT
+	if Vector2(x,y) in board:
+		if !died and board[Vector2(x,y)] != FLAG:
+						var local_mines = 0
+						for i in 3:
+							for j in 3:
+								if Vector2(x-1+i,y-1+j) in board:
+									if board[Vector2(x-1+i, y-1+j)] == MINE: #or board[Vector2(x-1+i, y-1+j)] == FLAG:
+										local_mines += 1
+						if local_mines > 0:
+							btn.set_normal_texture(load("res://pplate_"+str(local_mines)+".png"))
+							#board[Vector2(x,y)] = NUMBER
+						else:
+							btn.set_normal_texture(load("res://pressedplate.png"))
+							board[Vector2(x,y)] = EMPTY_HIT
+#func check():
+#	var hits = 0
+#	for i in int(columns):
+#		for j in int(rows):
+#			if board[Vector2(i,j)] == EMPTY_HIT:
+#				hits += 1
+#	print(hits)
+#	if hits == columns * rows:
+#
+#		print("You won!")
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass

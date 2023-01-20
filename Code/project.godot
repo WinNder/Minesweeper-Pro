@@ -16,9 +16,9 @@ config/icon="res://icon.png"
 
 [debug]
 
-settings/physics_interpolation/enable_warnings=false
 settings/gdscript/max_call_stack=2048
 settings/visual_script/max_call_stack=2048
+settings/physics_interpolation/enable_warnings=false
 
 [display]
 
